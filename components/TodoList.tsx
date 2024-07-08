@@ -21,7 +21,15 @@ const TodoList = () => {
         }
     }, [query])
     return (
-        <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }}>
+        <ScrollView
+            contentContainerStyle={{
+                flexGrow: 1,
+                marginHorizontal: 10,
+                paddingBottom: 100,
+                gap: 10,
+                marginTop: 10,
+            }}
+        >
             {todos.map((item) => {
                 return <TodoCard key={item.id} {...item} />
             })}

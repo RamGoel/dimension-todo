@@ -1,3 +1,4 @@
+import { useAddTodoStore } from '@/hooks/useAddTodo'
 import { useTodoStore } from '@/hooks/useTodos'
 import { CONSTANTS } from '@/utils/constants'
 import React from 'react'
@@ -5,19 +6,24 @@ import { StyleSheet } from 'react-native'
 import { Appbar } from 'react-native-paper'
 
 const Header = () => {
-    const { setState } = useTodoStore()
+    const { setState: setTodoState } = useTodoStore()
+    const { setState } = useAddTodoStore()
     const _handleSearch = () => {
-        setState({
+        setTodoState({
             showSearch: true,
         })
     }
 
-    const _handleMore = () => console.log('Shown more')
+    const _handleMore = () => {
+        setState({
+            showForm: true,
+        })
+    }
     return (
         <Appbar.Header>
             <Appbar.Content title={CONSTANTS.appName} />
             <Appbar.Action icon="magnify" onPress={_handleSearch} />
-            <Appbar.Action icon="dots-vertical" onPress={_handleMore} />
+            <Appbar.Action icon="plus" onPress={_handleMore} />
         </Appbar.Header>
     )
 }

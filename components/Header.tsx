@@ -1,10 +1,16 @@
+import { useTodoStore } from '@/hooks/useTodos'
 import { CONSTANTS } from '@/utils/constants'
 import React from 'react'
 import { StyleSheet } from 'react-native'
 import { Appbar } from 'react-native-paper'
 
 const Header = () => {
-    const _handleSearch = () => console.log('Searching')
+    const { setState } = useTodoStore()
+    const _handleSearch = () => {
+        setState({
+            showSearch: true,
+        })
+    }
 
     const _handleMore = () => console.log('Shown more')
     return (

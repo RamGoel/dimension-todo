@@ -1,8 +1,9 @@
 import { useTodoStore } from '@/hooks/useTodos'
 import { TodoProps } from '@/types/Todo'
+import { COLORS } from '@/utils/styles'
 import { AntDesign } from '@expo/vector-icons'
 import * as React from 'react'
-import { Alert, View } from 'react-native'
+import { Alert, StyleSheet, View } from 'react-native'
 import {
     Card,
     IconButton,
@@ -19,7 +20,7 @@ const LeftContent = (props: any) => (
             justifyContent: 'center',
             alignItems: 'center',
             borderRadius: 500,
-            backgroundColor: MD3Colors.tertiary50,
+            backgroundColor: COLORS.quaternary,
         }}
         onPress={() => {
             console.log(props)
@@ -27,8 +28,9 @@ const LeftContent = (props: any) => (
     >
         <Text
             style={{
-                color: 'white',
+                color: COLORS.white,
                 fontSize: 17,
+                fontWeight: 'bold',
             }}
         >
             {props.title[0]}
@@ -59,6 +61,20 @@ const RightContent = (props: any) => {
             ]
         )
     }
+
+    const markTodoComplete = (id: string | number) => {
+        setState({
+            todos: todos.map((todo) => {
+                if (todo.id === id) {
+                    return {
+                        ...todo,
+                        completed: !todo.completed,
+                    }
+                }
+                return todo
+            }),
+        })
+    }
     return (
         <View
             style={{
@@ -79,39 +95,39 @@ const RightContent = (props: any) => {
                 iconColor="green"
                 size={20}
                 borderless
-                onPress={() => deleteTodo(props.itemId)}
+                onPress={() => markTodoComplete(props.itemId)}
             />
         </View>
     )
 }
 
 const TodoCard = (props: TodoProps) => (
-    <Card
-        style={{
-            marginHorizontal: 10,
-            borderWidth: 1,
-            borderColor: '#D3D3D3',
-            backgroundColor: 'white',
-            elevation: 0,
-            shadowColor: 'transparent',
-        }}
-        elevation={0}
-    >
+    <Card style={styles.container} elevation={0}>
         <Card.Title
             title={props.title}
             subtitle={props.description}
-            titleStyle={{
-                fontWeight: 'semibold',
-                fontSize: 15,
-            }}
-            subtitleStyle={{
-                marginTop: -5,
-                fontSize: 13,
-            }}
+            titleStyle={styles.title}
+            subtitleStyle={styles.subtitle}
             left={(params) => <LeftContent {...params} title={props.title} />}
             right={(params) => <RightContent {...params} itemId={props.id} />}
         />
     </Card>
 )
+
+const styles = StyleSheet.create({
+    container: {
+        backgroundColor: COLORS.secondary,
+    },
+    title: {
+        fontWeight: 'semibold',
+        color: COLORS.white,
+        fontSize: 15,
+    },
+    subtitle: {
+        marginTop: -5,
+        color: COLORS.whiteLight,
+        fontSize: 13,
+    },
+})
 
 export default TodoCard

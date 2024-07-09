@@ -6,7 +6,7 @@ export const DATA: Array<TodoProps> = [
         type: 'task',
         title: 'Grocery Shopping',
         description: 'Buy groceries for the week',
-        completed: false,
+        completed: true,
         parentId: null,
     },
     {
@@ -22,7 +22,7 @@ export const DATA: Array<TodoProps> = [
         type: 'subtask',
         title: 'Buy vegetables',
         description: 'Carrots, Broccoli, Spinach',
-        completed: false,
+        completed: true,
         parentId: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
     },
     {
@@ -54,7 +54,7 @@ export const DATA: Array<TodoProps> = [
         type: 'task',
         title: 'Exercise',
         description: 'Daily workout routine',
-        completed: false,
+        completed: true,
         parentId: null,
     },
     {

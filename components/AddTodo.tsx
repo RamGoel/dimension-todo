@@ -1,5 +1,6 @@
 import { useAddTodoStore } from '@/hooks/useAddTodo'
 import { useTodoStore } from '@/hooks/useTodos'
+import { COLORS } from '@/utils/styles'
 import React, { useEffect, useRef, useState } from 'react'
 import { KeyboardAvoidingView, StyleSheet, View } from 'react-native'
 import { Button, Text, TextInput } from 'react-native-paper'
@@ -44,8 +45,10 @@ const AddTodo = () => {
                 onClose={() => {
                     setState({ showForm: false, todoData: null })
                 }}
-                height={300}
+                height={320}
+                openDuration={300}
                 closeOnPressMask
+                draggable
                 customStyles={{
                     draggableIcon: {
                         backgroundColor: '#000',
@@ -53,6 +56,7 @@ const AddTodo = () => {
                     container: {
                         borderTopLeftRadius: 20,
                         borderTopRightRadius: 20,
+                        backgroundColor: COLORS.primary,
                     },
                 }}
                 customModalProps={{
@@ -64,24 +68,31 @@ const AddTodo = () => {
                 }}
             >
                 <View style={{ padding: 20, flexDirection: 'column', gap: 20 }}>
-                    <Text variant="headlineSmall">Add a Todo</Text>
+                    <Text variant="titleLarge" style={{ color: COLORS.white }}>
+                        Add a Todo
+                    </Text>
 
                     <TextInput
                         label="Title"
                         style={{
-                            borderColor: '#D3D3D3',
+                            backgroundColor: COLORS.secondary,
+                            color: COLORS.white,
                         }}
-                        placeholderTextColor={'#D3D3D3'}
                         mode="outlined"
+                        textColor={COLORS.white}
+                        outlineColor={COLORS.whiteLight}
                         value={title}
                         onChangeText={setTitle}
                     />
                     <TextInput
                         label="Description"
                         style={{
-                            borderColor: '#D3D3D3',
+                            backgroundColor: COLORS.secondary,
+                            color: COLORS.white,
                         }}
+                        textColor={COLORS.white}
                         mode="outlined"
+                        outlineColor={COLORS.whiteLight}
                         value={description}
                         onChangeText={setDescription}
                     />
@@ -92,7 +103,9 @@ const AddTodo = () => {
                             height: 50,
                             justifyContent: 'center',
                             alignItems: 'center',
+                            backgroundColor: COLORS.quaternary,
                         }}
+                        labelStyle={{ color: COLORS.white }}
                         disabled={!title || !description}
                         onPress={handleAddTodo}
                     >

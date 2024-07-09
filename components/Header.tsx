@@ -1,63 +1,59 @@
 import { useAddTodoStore } from '@/hooks/useAddTodo'
-import { useTodoStore } from '@/hooks/useTodos'
-import React, { useEffect } from 'react'
-import { Image, StyleSheet, View } from 'react-native'
-import { Appbar, Text } from 'react-native-paper'
+import { COLORS } from '@/utils/styles'
+import { AntDesign } from '@expo/vector-icons'
+import React from 'react'
+import { StyleSheet, Text, View } from 'react-native'
+import { Appbar, TouchableRipple } from 'react-native-paper'
 
 const Header = () => {
-    const { setState: setTodoState, showSearch } = useTodoStore()
-    const { setState } = useAddTodoStore()
-    const _handleSearch = () => {
-        setTodoState({
-            showSearch: true,
-        })
-    }
-
-    useEffect(() => {
-        if (!showSearch) {
-            setTodoState({ query: '' })
-        }
-    }, [showSearch])
-
-    const _handleMore = () => {
-        setState({
-            showForm: true,
-        })
-    }
+    const { showForm, setState } = useAddTodoStore()
     return (
-        <Appbar.Header style={{ backgroundColor: 'transparent' }}>
-            <View
-                style={{
-                    flex: 1,
-                    paddingLeft: 10,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    gap: 10,
-                }}
-            >
-                <Image
-                    style={{ width: 40, height: 40, borderRadius: 500 }}
-                    src="https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg"
-                />
-                <View>
-                    <Text
-                        style={{
-                            fontSize: 20,
-                        }}
-                    >
-                        Hi, Ram
-                    </Text>
-                    <Text style={{ fontSize: 12 }}>
-                        Your daily adventure starts now
-                    </Text>
-                </View>
+        <Appbar style={styles.container}>
+            <View>
+                <Text
+                    style={{
+                        fontSize: 17,
+                        color: COLORS.white,
+                    }}
+                >
+                    Hi, Ram
+                </Text>
+                <Text
+                    style={{
+                        fontSize: 17,
+                        fontWeight: 'bold',
+                        color: COLORS.white,
+                    }}
+                >
+                    Be Productive Today
+                </Text>
             </View>
-            <Appbar.Action icon="magnify" onPress={_handleSearch} />
-            <Appbar.Action icon="plus" onPress={_handleMore} />
-        </Appbar.Header>
+
+            <TouchableRipple
+                onPress={() => {
+                    setState({ showForm: true })
+                }}
+                style={styles.iconBox}
+            >
+                <AntDesign size={22} color={COLORS.white} name="plus" />
+            </TouchableRipple>
+        </Appbar>
     )
 }
 
 export default Header
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    iconBox: {
+        flex: 1,
+        alignItems: 'flex-end',
+    },
+    container: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 10,
+        backgroundColor: 'transparent',
+        marginTop: 50,
+        marginBottom: -15,
+    },
+})

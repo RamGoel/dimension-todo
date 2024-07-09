@@ -1,23 +1,30 @@
 import AddTodo from '@/components/AddTodo'
 import Header from '@/components/Header'
+import TaskProgress from '@/components/TaskProgress'
 import TodoList from '@/components/TodoList'
 import TodoSearchBar from '@/components/TodoSearchBar'
 import { useTodoStore } from '@/hooks/useTodos'
+import { COLORS } from '@/utils/styles'
 import React from 'react'
-import { View } from 'react-native'
+import { ScrollView } from 'react-native'
 
 export default function HomeScreen() {
     const { showSearch } = useTodoStore()
     return (
-        <View
-            style={{
-                backgroundColor: 'white',
-                flex: 1,
+        <ScrollView
+            contentContainerStyle={{
+                backgroundColor: COLORS.primary,
+                paddingHorizontal: 20,
+                gap: 20,
+                flexGrow: 1,
             }}
         >
-            {showSearch ? <TodoSearchBar /> : <Header />}
-            <TodoList />
+            <Header />
+            <TodoSearchBar />
+            <TaskProgress />
+            <TodoList type="pending" />
+            <TodoList type="completed" />
             <AddTodo />
-        </View>
+        </ScrollView>
     )
 }

@@ -1,5 +1,5 @@
 export interface TodoProps {
-    id: string
+    id: number | string
     type: 'task' | 'subtask'
     title: string
     description: string

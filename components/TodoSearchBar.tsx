@@ -10,10 +10,20 @@ const TodoSearchBar = () => {
         setState({ showSearch: false })
     }
     return (
-        <Appbar.Header style={{ padding: 5 }}>
+        <Appbar.Header>
             <Searchbar
                 mode="bar"
-                style={{ height: 40, flex: 1, marginHorizontal: 10 }}
+                style={{
+                    flex: 1,
+                    marginHorizontal: 10,
+                    alignItems: 'center',
+                    height: 45,
+                    justifyContent: 'center',
+                    flexDirection: 'row',
+                }}
+                inputStyle={{
+                    minHeight: 0,
+                }}
                 placeholder="Search"
                 onChangeText={(text: string) => setState({ query: text })}
                 value={query}

@@ -1,4 +1,4 @@
-import { TodoProps } from '@/utils/types/Todo'
+import { TodoProps } from '@/types/Todo'
 
 export const DATA: Array<TodoProps> = [
     {

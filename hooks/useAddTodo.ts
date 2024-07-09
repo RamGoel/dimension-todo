@@ -6,16 +6,12 @@ interface AddTodoStoreProps {
     todoData: {
         title: string
         description: string
-        status: 'completed' | 'incomplete'
-    }
+        completed: boolean
+    } | null
 }
 
 export const useAddTodoStore = create<AddTodoStoreProps>()((set, get) => ({
     showForm: false,
     setState: (state) => set({ ...get(), ...state }),
-    todoData: {
-        title: '',
-        description: '',
-        status: 'incomplete',
-    },
+    todoData: null,
 }))

@@ -1,5 +1,5 @@
+import { TodoProps } from '@/types/Todo'
 import { DATA } from '@/utils/data'
-import { TodoProps } from '@/utils/types/Todo'
 import { create } from 'zustand'
 
 interface TodoStoreProps {

@@ -24,7 +24,6 @@ const TodoList = () => {
         <ScrollView
             contentContainerStyle={{
                 flexGrow: 1,
-                marginHorizontal: 10,
                 paddingBottom: 100,
                 gap: 10,
                 marginTop: 10,

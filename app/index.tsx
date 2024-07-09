@@ -7,9 +7,14 @@ import React from 'react'
 import { View } from 'react-native'
 
 export default function HomeScreen() {
-    const { query, setState, showSearch } = useTodoStore()
+    const { showSearch } = useTodoStore()
     return (
-        <View>
+        <View
+            style={{
+                backgroundColor: 'white',
+                flex: 1,
+            }}
+        >
             {showSearch ? <TodoSearchBar /> : <Header />}
             <TodoList />
             <AddTodo />

@@ -28,8 +28,7 @@ const LeftContent = (props: any) => (
         <Text
             style={{
                 color: 'white',
-                fontSize: 20,
-                fontWeight: 'bold',
+                fontSize: 17,
             }}
         >
             {props.title[0]}
@@ -87,19 +86,31 @@ const RightContent = (props: any) => {
 }
 
 const TodoCard = (props: TodoProps) => (
-    <Card>
-        <View>
-            <Card.Title
-                title={props.title}
-                subtitle={props.description}
-                left={(params) => (
-                    <LeftContent {...params} title={props.title} />
-                )}
-                right={(params) => (
-                    <RightContent {...params} itemId={props.id} />
-                )}
-            />
-        </View>
+    <Card
+        style={{
+            marginHorizontal: 10,
+            borderWidth: 1,
+            borderColor: '#D3D3D3',
+            backgroundColor: 'white',
+            elevation: 0,
+            shadowColor: 'transparent',
+        }}
+        elevation={0}
+    >
+        <Card.Title
+            title={props.title}
+            subtitle={props.description}
+            titleStyle={{
+                fontWeight: 'semibold',
+                fontSize: 15,
+            }}
+            subtitleStyle={{
+                marginTop: -5,
+                fontSize: 13,
+            }}
+            left={(params) => <LeftContent {...params} title={props.title} />}
+            right={(params) => <RightContent {...params} itemId={props.id} />}
+        />
     </Card>
 )
 

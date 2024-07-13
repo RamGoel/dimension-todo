@@ -8,10 +8,12 @@ import { Text } from 'react-native-paper'
 
 const TaskProgress = () => {
     const { todos } = useTodoStore()
-    let completedTasksCount = todos.length
-        ? todos.filter((todo) => todo.completed).length
+    let completedTasksCount = todos?.length
+        ? todos?.filter((todo) => todo.completed).length
         : 0
-    let percentage = (completedTasksCount / todos.length) * 100
+    let percentage = todos?.length
+        ? (completedTasksCount / todos?.length) * 100
+        : 0
     return (
         <View style={styles.container}>
             <View>
@@ -19,7 +21,7 @@ const TaskProgress = () => {
                     Task Progress
                 </Text>
                 <Text variant="titleMedium" style={styles.subtitle}>
-                    {completedTasksCount}/{todos.length} task done
+                    {completedTasksCount}/{todos?.length} task done
                 </Text>
 
                 <View style={styles.badge}>

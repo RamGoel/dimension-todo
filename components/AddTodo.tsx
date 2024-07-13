@@ -1,51 +1,64 @@
-import { useAddTodoStore } from '@/hooks/useAddTodo'
+import { useReplicache } from '@/hooks/useReplicache'
 import { useTodoStore } from '@/hooks/useTodos'
-import { COLORS } from '@/utils/styles'
+import { extractErrorMessage } from '@/utils/api'
+import { borderRadius, COLORS } from '@/utils/styles'
 import React, { useEffect, useRef, useState } from 'react'
-import { KeyboardAvoidingView, StyleSheet, View } from 'react-native'
-import { Button, Text, TextInput } from 'react-native-paper'
+import {
+    KeyboardAvoidingView,
+    StyleSheet,
+    ToastAndroid,
+    View,
+} from 'react-native'
+
+import {
+    ActivityIndicator,
+    Text,
+    TextInput,
+    TouchableRipple,
+} from 'react-native-paper'
 import RBSheet from 'react-native-raw-bottom-sheet'
-const AddTodo = () => {
+const AddTodo = ({ listId }: { listId: string }) => {
     const refRBSheet = useRef(null)
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
-    const { showForm, setState } = useAddTodoStore()
-    const { setState: setTodoState, todos } = useTodoStore()
+    const { setState, showAddForm, isLoading } = useTodoStore()
+    const rep = useReplicache(listId || '')
 
     useEffect(() => {
-        if (showForm) {
+        if (showAddForm) {
             ;(refRBSheet?.current as any).open()
         } else {
             ;(refRBSheet?.current as any).close()
         }
-    }, [showForm])
+    }, [showAddForm])
 
-    const handleAddTodo = () => {
-        setTodoState({
-            todos: [
-                {
-                    title: title,
-                    description: description,
-                    completed: false,
-                    id: todos.length + 1,
-                    parentId: null,
-                    type: 'task',
-                },
-                ...todos,
-            ],
-        })
-        setTitle('')
-        setDescription('')
-        setState({ showForm: false })
+    const handleAddTodo = async () => {
+        try {
+            if (title.length <= 3) {
+                return ToastAndroid.show(
+                    'Title must be at least 3 characters',
+                    ToastAndroid.SHORT
+                )
+            }
+            setState({ isLoading: true })
+            await rep.mutate.createTodo({ title, description })
+            setTitle('')
+            setDescription('')
+            setState({ showAddForm: false, isLoading: false })
+        } catch (e) {
+            console.log(e)
+            ToastAndroid.show(extractErrorMessage(e), ToastAndroid.SHORT)
+            setState({ isLoading: false })
+        }
     }
     return (
         <KeyboardAvoidingView>
             <RBSheet
                 ref={refRBSheet}
                 onClose={() => {
-                    setState({ showForm: false, todoData: null })
+                    setState({ showAddForm: false })
                 }}
-                height={320}
+                height={400}
                 openDuration={300}
                 closeOnPressMask
                 draggable
@@ -73,44 +86,65 @@ const AddTodo = () => {
                     </Text>
 
                     <TextInput
-                        label="Title"
                         style={{
-                            backgroundColor: COLORS.secondary,
+                            backgroundColor: 'transparent',
                             color: COLORS.white,
+                            borderRadius: 20,
                         }}
                         mode="outlined"
+                        placeholder="Title"
                         textColor={COLORS.white}
                         outlineColor={COLORS.whiteLight}
+                        placeholderTextColor={COLORS.whiteLight}
+                        activeOutlineColor={COLORS.whiteLight}
                         value={title}
                         onChangeText={setTitle}
                     />
                     <TextInput
-                        label="Description"
                         style={{
-                            backgroundColor: COLORS.secondary,
+                            backgroundColor: 'transparent',
                             color: COLORS.white,
+                            borderRadius: 20,
+                            height: 140,
+                            textAlignVertical: 'top',
                         }}
                         textColor={COLORS.white}
                         mode="outlined"
+                        placeholder="Description"
                         outlineColor={COLORS.whiteLight}
+                        placeholderTextColor={COLORS.whiteLight}
+                        activeOutlineColor={COLORS.whiteLight}
                         value={description}
+                        multiline
                         onChangeText={setDescription}
                     />
 
-                    <Button
-                        mode="contained"
+                    <TouchableRipple
                         style={{
                             height: 50,
                             justifyContent: 'center',
                             alignItems: 'center',
-                            backgroundColor: COLORS.quaternary,
+                            backgroundColor: title
+                                ? COLORS.quaternary
+                                : COLORS.whiteLight,
+                            borderRadius: borderRadius,
                         }}
-                        labelStyle={{ color: COLORS.white }}
-                        disabled={!title || !description}
+                        disabled={!title}
                         onPress={handleAddTodo}
                     >
-                        Create
-                    </Button>
+                        {isLoading ? (
+                            <ActivityIndicator />
+                        ) : (
+                            <Text
+                                style={{
+                                    color: COLORS.white,
+                                    fontWeight: 'bold',
+                                }}
+                            >
+                                Create
+                            </Text>
+                        )}
+                    </TouchableRipple>
                 </View>
             </RBSheet>
         </KeyboardAvoidingView>

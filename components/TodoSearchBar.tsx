@@ -8,9 +8,6 @@ import { Searchbar } from 'react-native-paper'
 const TodoSearchBar = () => {
     const { query, setState } = useTodoStore()
 
-    const handleClose = () => {
-        setState({ query: '' })
-    }
     return (
         <Searchbar
             mode="bar"

@@ -1,7 +1,8 @@
+import { useReplicache } from '@/hooks/useReplicache'
 import { useTodoStore } from '@/hooks/useTodos'
 import { TodoProps } from '@/types/Todo'
 import { COLORS } from '@/utils/styles'
-import { AntDesign } from '@expo/vector-icons'
+import { AntDesign, EvilIcons } from '@expo/vector-icons'
 import * as React from 'react'
 import { Alert, StyleSheet, View } from 'react-native'
 import {
@@ -38,8 +39,9 @@ const LeftContent = (props: any) => (
     </TouchableRipple>
 )
 const RightContent = (props: any) => {
-    const { setState, todos } = useTodoStore()
-    const deleteTodo = (id: string | number) => {
+    const { updateTodo, deleteTodo } = useTodoStore()
+    const rep = useReplicache(props.listId)
+    const handleDelete = (id: string) => {
         Alert.alert(
             'Delete Todo',
             'Are you sure you want to delete this todo?',
@@ -52,9 +54,7 @@ const RightContent = (props: any) => {
                 {
                     text: 'Delete',
                     onPress: () => {
-                        setState({
-                            todos: todos.filter((todo) => todo.id !== id),
-                        })
+                        rep.mutate.deleteTodo(id)
                     },
                     style: 'destructive',
                 },
@@ -62,18 +62,8 @@ const RightContent = (props: any) => {
         )
     }
 
-    const markTodoComplete = (id: string | number) => {
-        setState({
-            todos: todos.map((todo) => {
-                if (todo.id === id) {
-                    return {
-                        ...todo,
-                        completed: !todo.completed,
-                    }
-                }
-                return todo
-            }),
-        })
+    const markTodoComplete = (id: number) => {
+        // updateTodo(id, { completed: true })
     }
     return (
         <View
@@ -81,38 +71,77 @@ const RightContent = (props: any) => {
                 width: 'auto',
                 flexDirection: 'row',
                 alignItems: 'center',
+                marginRight: 20,
             }}
         >
-            <AntDesign
-                name="delete"
-                color={MD3Colors.error50}
-                size={20}
-                borderless
-                onPress={() => deleteTodo(props.itemId)}
-            />
-            <IconButton
-                icon="check"
-                iconColor="green"
-                size={20}
-                borderless
-                onPress={() => markTodoComplete(props.itemId)}
-            />
+            {props.completed === false ? (
+                <AntDesign
+                    name="delete"
+                    color={MD3Colors.error50}
+                    size={20}
+                    borderless
+                    onPress={() => handleDelete(props.itemId)}
+                />
+            ) : (
+                <EvilIcons
+                    name="undo"
+                    color={COLORS.white}
+                    size={30}
+                    borderless
+                    onPress={() => {
+                        updateTodo(props.itemId, { completed: false })
+                    }}
+                />
+            )}
+            {props.completed === false ? (
+                <IconButton
+                    icon="check"
+                    iconColor="green"
+                    size={20}
+                    borderless
+                    onPress={() => markTodoComplete(props.itemId)}
+                />
+            ) : null}
         </View>
     )
 }
 
-const TodoCard = (props: TodoProps) => (
-    <Card style={styles.container} elevation={0}>
-        <Card.Title
-            title={props.title}
-            subtitle={props.description}
-            titleStyle={styles.title}
-            subtitleStyle={styles.subtitle}
-            left={(params) => <LeftContent {...params} title={props.title} />}
-            right={(params) => <RightContent {...params} itemId={props.id} />}
-        />
-    </Card>
-)
+const TodoCard = ({ todo, listId }: { todo: TodoProps; listId: string }) => {
+    const { setState } = useTodoStore()
+    return (
+        <Card
+            onPress={() => {
+                setState({ clickedTodo: todo })
+            }}
+            style={styles.container}
+            elevation={0}
+        >
+            <Card.Title
+                title={todo.title}
+                subtitle={todo.description}
+                subtitleNumberOfLines={1}
+                titleStyle={styles.title}
+                subtitleStyle={styles.subtitle}
+                left={(params) => (
+                    <LeftContent
+                        {...params}
+                        title={todo.title}
+                        completed={todo.completed}
+                    />
+                )}
+                right={(params) => (
+                    // If the todo is completed, don't show the delete or mark as completed buttons
+                    <RightContent
+                        {...params}
+                        listId={listId}
+                        itemId={todo.id}
+                        completed={todo.completed}
+                    />
+                )}
+            />
+        </Card>
+    )
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -127,6 +156,7 @@ const styles = StyleSheet.create({
         marginTop: -5,
         color: COLORS.whiteLight,
         fontSize: 13,
+        overflow: 'visible',
     },
 })
 
